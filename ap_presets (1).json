@@ -1,0 +1,163 @@
+{
+  "TP-Link Archer AX20 AX1800": {
+    "vendor": "TP-Link",
+    "model": "Archer AX20",
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -41, "5": -40 },
+    "eirp_dbm": { "2.4": 20, "5": 23 },
+    "antennas": "4x Fixed High-Performance Antennas",
+    "standards": ["802.11ax", "ac", "n", "a", "b", "g"],
+    "notes": "AX1800; 2.4GHz: 574 Mbps; 5GHz: 1201 Mbps; Buttons: Reset/WPS/Power/LED"
+  },
+  "TOTOLINK A3002RU": {
+    "vendor": "TOTOLINK",
+    "model": "A3002RU",
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -42, "5": -41 },
+    "eirp_dbm": { "2.4": 20, "5": 23 },
+    "rx_sensitivity": {
+      "2.4": { "11b": -79, "11g": -68, "11n20": -65, "11n40": -61 },
+      "5":   { "11a": -68, "11ac20": -65, "11ac40": -61, "11ac80": -51 }
+    },
+    "interfaces": ["4x LAN Gigabit", "1x WAN Gigabit", "1x USB 2.0"],
+    "antennas": "2x 5dBi (2.4G) + 2x 5dBi (5G) fixed",
+    "standards": ["802.11ac", "n", "g", "b", "a"],
+    "notes": "AC1200 dual band; Buttons: RST/WPS/Power"
+  },
+  "TP-Link Archer AX23 AX1800": {
+    "vendor": "TP-Link",
+    "model": "Archer AX23",
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -41, "5": -40 },
+    "eirp_dbm": { "2.4": 20, "5": 23 },
+    "antennas": "4 × Fixed High-Performance",
+    "standards": ["802.11ax", "ac", "n", "a", "b", "g"],
+    "interfaces": ["1x Gigabit WAN", "4x Gigabit LAN"],
+    "buttons": ["WPS/Wi-Fi", "Power On/Off", "LED On/Off", "Reset"],
+    "cpu": "Dual-Core",
+    "power": "12V / 1A",
+    "speeds": { "2.4": "574 Mbps (ax)", "5": "1201 Mbps (ax)" },
+    "modes": ["Router", "Access Point"],
+    "cert": ["FCC", "CE", "RoHS"],
+    "env": {
+      "op_temp": "0–40°C",
+      "op_hum": "10–90% non-condensing",
+      "st_temp": "-40–70°C",
+      "st_hum": "5–90% non-condensing"
+    },
+    "notes": "AX1800 dual-band Wi-Fi 6"
+  },
+  "TP-Link Archer C6 V4 AC1200": {
+    "vendor": "TP-Link",
+    "model": "Archer C6 V4",
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -43, "5": -42 },
+    "eirp_dbm": { "2.4": 20, "5": 23, "fcc_max": 30 },
+    "antennas": "4× Fixed High-Performance (beamforming)",
+    "standards": ["802.11ac", "n", "a", "g", "b"],
+    "interfaces": ["1x Gigabit WAN", "4x Gigabit LAN"],
+    "buttons": ["WPS/Wi-Fi", "Power On/Off", "Reset"],
+    "cpu": "1.2 GHz",
+    "security": ["WPA", "WPA2", "WPA3", "WPA/WPA2-Enterprise (802.1X)"],
+    "features": ["MU-MIMO", "Beamforming", "Airtime Fairness", "Guest Network", "OneMesh"],
+    "rx_sensitivity": {
+      "5": { "11a6": -93, "11a54": -78, "11ac20_mcs8": -69, "11ac40_mcs9": -65, "11ac80_mcs9": -62 },
+      "2.4": { "11g54": -78, "11n20_mcs7": -74, "11n40_mcs7": -71 }
+    },
+    "speeds": { "5": "867 Mbps (ac)", "2.4": "400 Mbps (n)" },
+    "notes": "AC1200 dual-band; SPI Firewall; Tether App; IPv6"
+  },
+  "Aruba AP-303 (JZ320A) (RW) Unified AP": {
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -42, "5": -40 },
+    "eirp_dbm": { "2.4": 20, "5": 23 },
+    "antenna_gain_dbi": { "2.4": 3.3, "5": 5.9 },
+    "meta": {
+      "sku": "JZ320A",
+      "radios": "Dual Radio 802.11ac, 2x2 MU-MIMO",
+      "max_rate": { "2.4": "300 Mbps (HT40 2SS)", "5": "867 Mbps (VHT80 2SS)" },
+      "bssids_per_radio": 16,
+      "ethernet": "1x 10/100/1000BASE-T (RJ-45)",
+      "ble": true,
+      "power_max_w": 10.1,
+      "poe_note": "ถ้าไม่ใช้ PoE ต้องมี Adapter JX990A หรือ Injector R6P68A",
+      "mount_kit": "AP-220-MNT-W1 (ดำ) หรือ AP-220-MNT-W1W (ขาว) ไม่แถมในชุด",
+      "key_features": [
+        "Controller-based / Instant (Standalone) mode",
+        "QoS for UC apps, ACC (Advanced Cellular Coexistence)",
+        "RF Management, Air monitor (WIDS/Rogue)",
+        "Remote AP (RAP), AppRF (DPI)"
+      ],
+      "package": [
+        "Aruba AP-303 (RW) Unified AP (JZ320A)",
+        "Quick Start Guide",
+        "Ethernet Cable"
+      ]
+    },
+    "note": "2x2 MU-MIMO; 867 Mbps (5 GHz) + 300 Mbps (2.4 GHz); antenna gain 3.3/5.9 dBi"
+  },
+  "TP-Link Archer C80 AC1900": {
+    "vendor": "TP-Link",
+    "model": "Archer C80",
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -42, "5": -41 },
+    "eirp_dbm": { "2.4": 20, "5": 23, "fcc_max": 30 },
+    "antennas": "4 Fixed Omni Directional",
+    "standards": ["802.11a", "n", "ac", "b", "g"],
+    "interfaces": ["4x Gigabit LAN", "1x Gigabit WAN"],
+    "buttons": ["Reset", "WPS/Wi-Fi", "Power On/Off"],
+    "features": ["MU-MIMO", "Beamforming", "Smart Connect", "Airtime Fairness", "QoS"],
+    "rx_sensitivity": {
+      "5": {
+        "11a6": -98, "11a54": -78,
+        "11ac20_mcs0": -98, "11ac20_mcs8": -72,
+        "11ac40_mcs0": -92, "11ac40_mcs9": -68,
+        "11ac80_mcs0": -89, "11ac80_mcs9": -64
+      },
+      "2.4": {
+        "11g6": -97, "11a54": -77,
+        "11n20_mcs0": -97, "11n20_mcs8": -72,
+        "11n40_mcs0": -92, "11n40_mcs9": -67
+      }
+    },
+    "speeds": { "5": "1300 Mbps (ac)", "2.4": "600 Mbps (n)" },
+    "notes": "AC1900 dual-band; CE/EU power limits: <20 dBm (2.4), <23 dBm (5.15–5.25)"
+  },
+  "TOTOLINK A800R AC1200": {
+    "vendor": "TOTOLINK",
+    "model": "A800R",
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -43, "5": -42 },
+    "eirp_dbm": { "2.4": 22, "5": 20 },
+    "antennas": "4 × 5dBi fixed",
+    "standards": ["802.11ac", "a", "b", "g", "n"],
+    "interfaces": ["4x 100Mbps LAN", "1x 100Mbps WAN"],
+    "power": "9V DC / 0.8A",
+    "speeds": { "2.4": "300 Mbps", "5": "867 Mbps" },
+    "rx_sensitivity": {
+      "2.4": { "11b11_tx_dbm": "20±1.5", "11g54_tx_dbm": "17±1.5", "11n20_tx_dbm": "16±1.5", "11n40_tx_dbm": "16±1.5" },
+      "5":   { "11a54_tx_dbm": "18±2", "11ac80_mcs9_tx_dbm": "16±2" }
+    },
+    "notes": "AC1200 dual band; Lifetime warranty (หน้าไทย); QoS/DDNS/DoS/WMM/Access Control"
+  },
+  "MikroTik hAP ac2 (RBD52G-5HacD2HnD-TC)": {
+    "vendor": "MikroTik",
+    "model": "hAP ac²",
+    "bands": ["2.4", "5"],
+    "p0": { "2.4": -44, "5": -43 },
+    "eirp_dbm": { "2.4": 27, "5": 26 },
+    "antennas": "2x2 (2.4 GHz) + 2x2 (5 GHz), gain ~2.5 dBi",
+    "standards": ["802.11b", "g", "n", "a", "ac"],
+    "interfaces": ["5x Gigabit Ethernet", "1x USB A"],
+    "powering": "12–30 V DC jack / Passive PoE-in (18–28 V)",
+    "cpu": "IPQ-4018 quad-core 488–896 MHz",
+    "ram": "128 MB",
+    "os": "RouterOS (License L4)",
+    "wifi_speed": "AC1200",
+    "rx_sensitivity": {
+      "2.4": { "1M": -100, "11M": -94, "6M": -96, "54M": -78, "MCS0": -96, "MCS7": -73 },
+      "5":   { "6M": -96, "54M": -80, "MCS0": -96, "MCS7": -75, "MCS9": -70 }
+    },
+    "notes": "CE/FCC/IC/EAC/ROHS; Tested ambient -40..50°C; IPsec HW accel; Mode button"
+  }
+}
