@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Wi-Fi Heatmap — Survey / Planning</title>
+<style>
+  :root{ --bg:#0f1220; --panel:#171a2b; --muted:#9aa4b2; --text:#e8ecf1;
+         --card:#1b2035; --btn:#232845; --ring:#2a7fff55; --danger:#ff7b7b; }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;background:linear-gradient(120deg,#0f1220,#0e1428 60%,#0f1220);
+       color:var(--text);font:500 16px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+  header{padding:12px 16px;border-bottom:1px solid #202540;background:rgba(17,22,36,.7);
+         position:sticky;top:0;backdrop-filter:blur(8px);z-index:50;display:flex;align-items:center;gap:10px}
+  header h1{margin:0;font-size:18px;flex:1}
+  .mode-switch{display:flex;gap:6px}
+  .pill{padding:6px 10px;border-radius:999px;border:1px solid #2a3156;background:#1a1f39;color:#cfd6ff;cursor:pointer}
+  .pill.active{background:#2a3569;border-color:#3d4c9a;color:#fff;box-shadow:0 0 0 2px var(--ring)}
+  .container{display:grid;grid-template-columns:380px 1fr;gap:14px;padding:14px;height:calc(100% - 56px)}
+  .panel{background:var(--panel);border:1px solid #242a49;border-radius:14px;padding:14px;overflow:auto}
+  .section{margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed #2a3156}
+  .section:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+  .label{font-size:13px;color:var(--muted);margin:6px 0 6px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  input[type="file"],input[type="number"],input[type="text"],select{
+    background:var(--card);border:1px solid #2a3156;color:var(--text);
+    border-radius:10px;padding:8px 10px;outline:none
+  }
+  input[type="number"]{width:120px}
+  button{background:var(--btn);border:1px solid #2a3156;color:var(--text);padding:9px 12px;border-radius:11px;
+         cursor:pointer;transition:.15s;user-select:none}
+  button:hover{transform:translateY(-1px);box-shadow:0 6px 18px -10px #000,0 0 0 2px var(--ring)}
+  button.danger{background:#3a1b1b;border-color:#5a2a2a;color:#ffc6c6}
+  .chip{font-size:12px;border:1px solid #2a3156;border-radius:999px;padding:4px 9px;color:#9aa4b2;display:inline-flex;gap:6px;align-items:center}
+  .legend{display:flex;align-items:center;gap:10px}
+  .grad{width:220px;height:12px;border-radius:999px;border:1px solid #2a3156}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:#222846;border:1px solid #2a3156;border-radius:6px;padding:2px 6px;color:#b9c3ff;font-size:12px}
+  .muted{color:var(--muted)} .badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#22284a;border:1px solid #2a3156}
+  .small{font-size:12px}
+  .apRow,.matRow{display:flex;justify-content:space-between;gap:8px;align-items:center;background:#141a34;border:1px solid #2a3156;border-radius:10px;padding:6px 8px}
+  .dot{width:10px;height:10px;border-radius:50%}
+  @media (max-width:980px){ .container{grid-template-columns:1fr} }
+
+  /* canvases stack */
+  .stage{position:relative;display:inline-block;overflow:hidden;border-radius:12px;border:1px solid #242a49}
+  #canvas,#overlay{display:block}
+  #overlay{position:absolute; left:0; top:0; pointer-events:none; z-index:3;}
+
+  /* probe tooltip */
+  #probe{position:absolute;display:none;transform:translate(10px,-10px);
+         background:#0e1329;border:1px solid #2a3156;border-radius:10px;padding:6px 8px;
+         color:#e8ecf1;font:600 13px ui-monospace,monospace;pointer-events:none;z-index:4;
+         box-shadow:0 6px 20px rgba(0,0,0,.35)}
+  #probe .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;border:1px solid #0006}
+  #probe .sub{font-weight:500;color:#9aa4b2;margin-top:2px}
+
+  /* Survey placeholder */
+  .surveyBlank{background:#ffffff;border-radius:12px;border:1px dashed #cccccc; min-height:300px;
+    display:flex;align-items:center;justify-content:center;color:#333;font:600 18px/1.3 ui-sans-serif,system-ui}
+  .zoombar{display:flex;gap:6px}
+</style>
+</head>
+<body>
+<header>
+  <h1>แป้งโชไวไฟ888</h1>
+  <div class="mode-switch">
+    <div class="pill active" id="pillPlanning">Planning</div>
+    <div class="pill" id="pillSurvey">Survey</div>
+  </div>
+</header>
+
+<!-- Planning -->
+<div class="container" id="appPlanning" style="display:grid">
+  <aside class="panel">
+    <div class="section">
+      <div class="label">1) อัปโหลดแปลนพื้นที่ (PNG/JPG)</div>
+      <div class="row">
+        <input type="file" id="fileInput" accept="image/*"/>
+        <button id="btnClear">ล้าง</button>
+      </div>
+      <div class="row" style="margin-top:6px;justify-content:space-between">
+        <div class="small muted">ใช้ล้อเมาส์ซูม • Space+ลาก = แพน • รีเซ็ตวิว</div>
+        <div class="zoombar">
+          <button id="btnZoomOut">−</button>
+          <button id="btnZoomReset">100%</button>
+          <button id="btnZoomIn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="label">2) ตั้งสเกลหน่วยจริง</div>
+      <div class="row">
+        <button id="btnScale">🧭 ตั้งสเกล (กดค้าง–ลาก–ปล่อย)</button>
+        <button id="btnIdle">🖱️ เม้าส์ปกติ</button>
+        <span class="chip">สเกลปัจจุบัน: <span id="scaleLabel">ยังไม่ตั้ง</span></span>
+      </div>
+      <div class="small muted">ต้องรู้อัตรา px/เมตร เพื่อคำนวณระยะจาก AP → ทุกพิกัด</div>
+    </div>
+
+    <div class="section">
+      <div class="label">3) เลือกพรีเซ็ต Access Point</div>
+      <div class="row">
+        <select id="apPreset" style="min-width:220px"><option value="">(กำลังโหลดพรีเซ็ต...)</option></select>
+        <button id="btnUsePreset">ใช้พรีเซ็ต</button>
+      </div>
+      <div class="small muted">ไฟล์ <code>ap_presets.json</code> ที่โฟลเดอร์เดียวกับหน้านี้</div>
+    </div>
+
+    <div class="section">
+      <div class="label">4) วาง Access Point</div>
+      <div class="grid">
+        <div>
+          <div class="label">ชื่อ/SSID</div>
+          <input type="text" id="apLabel" placeholder="เช่น AP-1"/>
+        </div>
+        <div>
+          <div class="label">P₀ @1 m (ดBm)</div>
+          <input type="number" id="apP0" value="-40" step="1"/>
+        </div>
+        <div>
+          <div class="label">ย่าน</div>
+          <select id="apBand"><option value="2.4">2.4 GHz</option><option value="5" selected>5 GHz</option></select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnAP">📡 โหมดวาง AP (คลิก)</button>
+        <button id="btnAPUndo" class="ghost">↩️ ลบ AP ล่าสุด</button>
+        <button id="btnAPClear" class="danger">🗑️ ล้าง AP ทั้งหมด</button>
+      </div>
+      <div id="apList" style="margin-top:10px;display:grid;gap:6px;"></div>
+      <div class="small muted">หลาย AP ได้ — ระบบรวมกำลัง (mW) แล้วแปลงเป็น dBm</div>
+    </div>
+
+    <div class="section">
+      <div class="label">5) วัสดุ/สิ่งกีดขวาง</div>
+      <div class="grid">
+        <div>
+          <div class="label">ชนิดวัสดุ</div>
+          <select id="matType"></select>
+        </div>
+        <div>
+          <div class="label">การดูดกลืน (dB/ครั้ง)</div>
+          <input type="number" id="matAtt" value="8" step="0.5"/>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnMat">🧱 โหมดวัสดุ (กดค้าง–ลาก–ปล่อย)</button>
+        <button id="btnMatUndo" class="ghost">↩️ ลบเส้นล่าสุด</button>
+        <button id="btnMatClear" class="danger">🗑️ ล้างวัสดุทั้งหมด</button>
+      </div>
+      <div id="matList" style="margin-top:10px;display:grid;gap:6px;"></div>
+    </div>
+
+    <div class="section">
+      <div class="label">6) ตั้งค่าเรนเดอร์</div>
+      <div class="grid">
+        <div>
+          <div class="label">ความเนียน Blur (px)</div>
+          <input type="number" id="blurPx" value="16" min="0" step="1"/>
+        </div>
+        <div>
+          <div class="label">โปร่งใสฮีตแมป</div>
+          <input type="number" id="alpha" value="0.6" min="0" max="1" step="0.05"/>
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button id="btnRender">🔥 สร้าง Heatmap</button>
+        <button id="btnExport">🖼️ ส่งออก PNG</button>
+      </div>
+      <div class="legend" style="margin-top:10px">
+        <div id="grad" class="grad"></div>
+        <div class="small"><span id="legendMin">-80</span> dBm ⟷ <span id="legendMax">-50</span> dBm</div>
+      </div>
+      <div class="small muted">สี: ≤−67 เทา (อ่อนลงถึง −80) • −60 เหลือง • −30 เขียว • เส้นขาวทุก −5 dBm (−20..−80)</div>
+    </div>
+
+    <div class="section">
+      <div class="label">7) บันทึก/โหลดโปรเจกต์</div>
+      <div class="row">
+        <button id="btnSave">💾 Save JSON</button>
+        <input type="file" id="loadJson" accept="application/json"/>
+      </div>
+    </div>
+
+    <!-- ===== 8) Fractal (หลังจากสร้าง Heatmap) ===== -->
+    <div class="section">
+      <div class="label">8) Fractal (หลังจากสร้าง Heatmap แล้ว)</div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnFDContour">🧮 คำนวณ FD (Contour)</button>
+        <button id="btnFDDBC">🧮 คำนวณ FD (DBC)</button>
+        <button id="btnFDReset">🧹 ล้างกราฟ</button>
+      </div>
+      <div class="small muted" style="margin-top:6px">
+        Contour = จากเส้นคอนทัวร์ RSSI | DBC = จาก Heatmap แบบภาพเกรย์สเกล
+      </div>
+      <canvas id="fdPlot" width="360" height="240"
+              style="margin-top:10px;border:1px solid #2a3156;border-radius:10px;background:#0b1124"></canvas>
+      <div id="fdResult" class="small" style="margin-top:8px;color:#cfe6ff">
+        (ยังไม่มีผลลัพธ์ — กด “🔥 สร้าง Heatmap” แล้วจึงคำนวณ)
+      </div>
+    </div>
+
+    <div class="section small muted">
+      คีย์ลัด: <span class="kbd">S</span> สเกล • <span class="kbd">A</span> วาง AP • <span class="kbd">W</span> วัสดุ • <span class="kbd">H</span> เรนเดอร์ • <span class="kbd">Esc</span> เม้าส์ปกติ • ล้อเมาส์ซูม • Space+ลาก = แพน
+    </div>
+  </aside>
+
+  <main class="panel">
+    <div class="row">
+      <span class="badge" id="modeBadge">โหมด: Idle</span>
+      <span class="muted small">สเกล/วัสดุ = กดค้าง–ลาก–ปล่อย | AP = คลิก | Probe = คลิกหลังเรนเดอร์</span>
+    </div>
+
+    <div class="stage" id="stage">
+      <canvas id="canvas" width="1280" height="800"></canvas>
+      <canvas id="overlay" width="1280" height="800"></canvas>
+      <div id="probe">
+        <div><span class="sw" id="sw"></span><span id="probeVal">– dBm</span></div>
+        <div class="sub" id="probeMeta"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Survey (placeholder) -->
+<div class="container" id="appSurvey" style="display:none;grid-template-columns:1fr">
+  <main class="panel" style="display:flex;flex-direction:column;gap:12px">
+    <div class="row">
+      <span class="badge">โหมด: Survey (Placeholder)</span>
+      <span class="muted small">หน้านี้เว้นว่างไว้ให้คุณพัฒนาต่อ</span>
+    </div>
+    <div class="surveyBlank">Survey Mode — Blank Canvas</div>
+  </main>
+</div>
+
+<!-- สคริปต์หลัก + ฟีเจอร์ Fractal -->
+<script src="./app.js"></script>
+<script src="./fd.js"></script>
+</body>
+</html>
